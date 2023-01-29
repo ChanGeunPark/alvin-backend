@@ -4,5 +4,9 @@ export declare class EditProfileOutput extends CoreOutput {
 }
 declare const EditProfileInput_base: import("@nestjs/common").Type<Partial<CreateUserInput>>;
 export declare class EditProfileInput extends EditProfileInput_base {
+    profileImage?: string;
+    bannerImage?: string;
+    nickname?: string;
+    bio?: string;
 }
 export {};

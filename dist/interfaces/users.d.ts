@@ -1,17 +1,28 @@
-export type UserRole = 'Client' | 'Owner' | 'Delivery';
+export type UserRole = 'Client' | 'Owner' | 'Admin';
 export interface User {
-    id: number;
+    id: string;
     email: string;
     password: string;
     role: UserRole;
     verified?: boolean;
+    profileImage?: string;
+    bannerImage?: string;
+    nickname?: string;
+    bio?: string;
     updatedAt: Date;
     createdAt: Date;
 }
 export interface Verification {
-    id: number;
+    id: string;
     code: string;
-    userId: number;
+    userId: string;
+    updatedAt: Date;
+    createdAt: Date;
+}
+export interface Follow {
+    id: string;
+    followerId: string;
+    followingId: string;
     updatedAt: Date;
     createdAt: Date;
 }

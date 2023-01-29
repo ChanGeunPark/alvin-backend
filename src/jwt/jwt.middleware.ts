@@ -18,8 +18,8 @@ export class JwtMiddleWare implements NestMiddleware {
   ) {}
   // header에서 user를 request에 보내는 middleware 까지 만들었다.
   async use(req: Request, res: Response, nest: NextFunction) {
-    if ('x-jwt' in req.headers) {
-      const token = req.headers['x-jwt'];
+    if ('authorization' in req.headers) {
+      const token = req.headers['authorization'];
 
       try {
         const decoded = this.jwtService.verify(token.toString());

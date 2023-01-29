@@ -4,7 +4,7 @@ import { CoreEntity } from 'src/common/entities/core.entity';
 export enum UserRole {
   Client = 'Client',
   Owner = 'Owner',
-  Delivery = 'Delivery',
+  Admin = 'Admin',
 }
 
 registerEnumType(UserRole, { name: 'UserRole' });
@@ -21,6 +21,18 @@ export class User extends CoreEntity {
   @Field((type) => Boolean)
   verified?: boolean;
 
+  @Field((type) => String, { nullable: true })
+  profileImage?: string;
+
+  @Field((type) => String, { nullable: true })
+  bannerImage?: string;
+
+  @Field((type) => String, { nullable: true })
+  nickname?: string;
+
+  @Field((type) => String, { nullable: true })
+  bio?: string;
+
   @Field((type) => UserRole)
-  role: 'Client' | 'Owner' | 'Delivery';
+  role: 'Client' | 'Owner' | 'Admin';
 }

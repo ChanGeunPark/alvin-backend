@@ -14,8 +14,8 @@ const graphql_1 = require("@nestjs/graphql");
 let CoreEntity = class CoreEntity {
 };
 __decorate([
-    (0, graphql_1.Field)(() => Number),
-    __metadata("design:type", Number)
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
 ], CoreEntity.prototype, "id", void 0);
 __decorate([
     (0, graphql_1.Field)(() => Date),

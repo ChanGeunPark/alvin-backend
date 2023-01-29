@@ -16,7 +16,7 @@ var UserRole;
 (function (UserRole) {
     UserRole["Client"] = "Client";
     UserRole["Owner"] = "Owner";
-    UserRole["Delivery"] = "Delivery";
+    UserRole["Admin"] = "Admin";
 })(UserRole = exports.UserRole || (exports.UserRole = {}));
 (0, graphql_1.registerEnumType)(UserRole, { name: 'UserRole' });
 let User = class User extends core_entity_1.CoreEntity {
@@ -33,6 +33,22 @@ __decorate([
     (0, graphql_1.Field)((type) => Boolean),
     __metadata("design:type", Boolean)
 ], User.prototype, "verified", void 0);
+__decorate([
+    (0, graphql_1.Field)((type) => String, { nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "profileImage", void 0);
+__decorate([
+    (0, graphql_1.Field)((type) => String, { nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "bannerImage", void 0);
+__decorate([
+    (0, graphql_1.Field)((type) => String, { nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "nickname", void 0);
+__decorate([
+    (0, graphql_1.Field)((type) => String, { nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "bio", void 0);
 __decorate([
     (0, graphql_1.Field)((type) => UserRole),
     __metadata("design:type", String)

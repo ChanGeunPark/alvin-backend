@@ -16,4 +16,15 @@ export class EditProfileOutput extends CoreOutput {}
 export class EditProfileInput extends PartialType(CreateUserInput) {
   // PartialType은 PickType으로 선택된 필드들을 모두 optional로 만들어준다.
   // PickType은 User에서 email, password만 선택한다.
+  @Field((type) => String, { nullable: true })
+  profileImage?: string;
+
+  @Field((type) => String, { nullable: true })
+  bannerImage?: string;
+
+  @Field((type) => String, { nullable: true })
+  nickname?: string;
+
+  @Field((type) => String, { nullable: true })
+  bio?: string;
 }

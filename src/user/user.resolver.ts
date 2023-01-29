@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { CreateUserOutput, CreateUserInput } from './dto/create-user.input';
@@ -10,10 +18,15 @@ import { AuthUser } from 'src/auth/auth-user.decorator';
 import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
 import { EditProfileInput, EditProfileOutput } from './dto/edit-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify-email.dto';
+import { Collection } from 'src/collection/entities/collection.entity';
+import { CollectionService } from 'src/collection/collection.service';
 
 @Resolver((of) => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly collectionService: CollectionService,
+  ) {}
 
   @Mutation((returns) => CreateUserOutput) // Mutation의 return type을 직접 정의한다.
   createUser(
@@ -59,8 +72,13 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  removeUser(@Args('id', { type: () => Int }) id: number) {
+  removeUser(@Args('id', { type: () => Int }) id: string) {
     return this.userService.remove(id);
+  }
+
+  @ResolveField((type) => [Collection], { name: 'collections', nullable: true })
+  collections(@Parent() user: User) {
+    return this.collectionService.userFromCollection(user.id);
   }
 
   // verifyEmail

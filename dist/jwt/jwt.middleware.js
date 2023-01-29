@@ -19,8 +19,8 @@ let JwtMiddleWare = class JwtMiddleWare {
         this.userService = userService;
     }
     async use(req, res, nest) {
-        if ('x-jwt' in req.headers) {
-            const token = req.headers['x-jwt'];
+        if ('authorization' in req.headers) {
+            const token = req.headers['authorization'];
             try {
                 const decoded = this.jwtService.verify(token.toString());
                 if (typeof decoded === 'object' && decoded.hasOwnProperty('id')) {

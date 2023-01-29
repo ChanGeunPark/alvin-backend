@@ -81,6 +81,7 @@ export class UserService {
           email,
         },
       });
+
       if (!user) {
         return {
           ok: false,
@@ -116,11 +117,11 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} user`;
   }
 
-  async findById(id: number): Promise<UserProfileOutput> {
+  async findById(id: string): Promise<UserProfileOutput> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -139,7 +140,7 @@ export class UserService {
     }
   }
 
-  async editProfile(userId: number, editProfileInput: EditProfileInput) {
+  async editProfile(userId: string, editProfileInput: EditProfileInput) {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -147,20 +148,29 @@ export class UserService {
         },
       });
 
-      // 이메일이 변경되었을 경우에만 인증코드를 생성한다.
-      if (user && user.email !== editProfileInput.email) {
+      if (user) {
         const hashPassword = await bcrypt.hash(editProfileInput.password, 10);
-        const verification = await this.prisma.verification.create({
-          data: {
-            code: uuidv4().replace(/-/g, ''),
-            user: {
-              connect: {
-                id: user.id,
+
+        // 이메일이 변경되었을 경우에만 인증코드를 생성한다.
+        if (user.email !== editProfileInput.email) {
+          await this.prisma.verification.deleteMany({
+            where: {
+              userId: user.id,
+            },
+          });
+
+          const verification = await this.prisma.verification.create({
+            data: {
+              code: uuidv4().replace(/-/g, ''),
+              user: {
+                connect: {
+                  id: user.id,
+                },
               },
             },
-          },
-        });
-        this.mailService.sendVerificationEmail(user.email, verification.code);
+          });
+          this.mailService.sendVerificationEmail(user.email, verification.code);
+        }
 
         // 이메일과 비밀번호를 변경한다.
         await this.prisma.user.update({
@@ -170,6 +180,10 @@ export class UserService {
           data: {
             email: editProfileInput.email,
             password: editProfileInput.password ? hashPassword : user.password,
+            nickname: editProfileInput.nickname,
+            bio: editProfileInput.bio,
+            bannerImage: editProfileInput.bannerImage,
+            profileImage: editProfileInput.profileImage,
           },
         });
       } else {
@@ -179,7 +193,7 @@ export class UserService {
     } catch (e) {
       return {
         ok: false,
-        error: "Couldn't update profile",
+        error: e,
       };
     }
   }

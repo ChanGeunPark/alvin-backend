@@ -11,7 +11,7 @@ export class JwtService {
     @Inject(CONFIG_OPTIONS) private readonly options: JwtModuleOptions, // private readonly configService: ConfigService,
   ) {}
 
-  sign(userId: number): string {
+  sign(userId: string): string {
     /*
     return jwt.sign (payload, this.configService.get('PRIVATE_KEY')); //이런식으로 global config를 가져올 수 있다.
      */
