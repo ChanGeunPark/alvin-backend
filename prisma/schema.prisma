@@ -1,10 +1,14 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"] // if you want to plenetScale
 }
 
 datasource db {
-  provider = "postgresql"
+  provider             = "mysql"
+  // provider = "postgresql"
   url      = env("DATABASE_URL")
+  referentialIntegrity = "prisma" // if you want to plenetScale
+
 }
 
 model User{
@@ -18,6 +22,7 @@ model User{
   role      RoleStatus 
   verified  Boolean  @default(false)
 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -29,7 +34,44 @@ model User{
   Comments  Comment[]
   Followings Follow[] @relation("following")
   Followers Follow[] @relation("follower")
+  restaurant Restaurant[]
+  conversations conversation[]
+
 }
+
+
+model AiCharacter {
+  id        String      @id @default(cuid())
+  name      String
+
+  // 세계관
+  worldView String
+
+  // 성격
+  personality String
+
+  // 소개
+  introduction String
+  characterImage String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  conversations conversation[]
+}
+
+model conversation {
+  id        Int      @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  aiCharacter AiCharacter @relation(fields: [aiCharacterId], references: [id])
+  aiCharacterId String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  }
+
 
 
 model Verification{
@@ -49,7 +91,7 @@ model ArtWork{
   id        String       @id @default(cuid())
   title     String
   description String?
-  tags      String[]
+  // tags      String[]
   image     String
   width     Int?
   height    Int?
@@ -137,7 +179,6 @@ model Follow{
   follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
 }
 
-
 // Enums
 enum RoleStatus {
   Client
@@ -145,3 +186,35 @@ enum RoleStatus {
   Admin
 }
 
+
+// study model restaurant
+model Restaurant {
+  id        String      @id @default(cuid())
+  name      String
+  coverImg  String
+  isVegan   Boolean
+  address   String
+  userId    String
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relations
+  categories Category[]
+
+}
+
+model Category {
+  id        String      @id @default(cuid())
+  name      String
+  slug      String
+  coverImg  String
+  isVegan   Boolean
+  restaurantId String
+  
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}

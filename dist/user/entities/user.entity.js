@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = exports.UserRole = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const core_entity_1 = require("../../common/entities/core.entity");
+const restaurant_entity_1 = require("../../restaurant/entities/restaurant.entity");
 var UserRole;
 (function (UserRole) {
     UserRole["Client"] = "Client";
@@ -53,7 +54,12 @@ __decorate([
     (0, graphql_1.Field)((type) => UserRole),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [restaurant_entity_1.Restaurant], { nullable: true }),
+    __metadata("design:type", Array)
+], User.prototype, "restaurants", void 0);
 User = __decorate([
+    (0, graphql_1.InputType)('UserInputType', { isAbstract: true }),
     (0, graphql_1.ObjectType)()
 ], User);
 exports.User = User;

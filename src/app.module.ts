@@ -17,6 +17,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { MailModule } from './mail/mail.module';
 import { ArtWorkModule } from './artwork/artwork.module';
 import { CollectionModule } from './collection/collection.module';
+import { RestaurantModule } from './restaurant/restaurant.module';
+import { CharacterModule } from './character/character.module';
 
 @Module({
   imports: [
@@ -61,7 +63,9 @@ import { CollectionModule } from './collection/collection.module';
       fromEmail: process.env.MAIL_FROM_EMAIL,
     }),
     ArtWorkModule,
+    CharacterModule,
     CollectionModule,
+    RestaurantModule,
   ],
   controllers: [],
   providers: [PrismaService],
