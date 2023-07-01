@@ -2,8 +2,8 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class CoreEntity {
-  @Field(() => Number)
-  id: number;
+  @Field(() => String)
+  id: string;
 
   @Field(() => Date)
   createdAt: Date;

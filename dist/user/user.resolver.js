@@ -24,9 +24,12 @@ const auth_user_decorator_1 = require("../auth/auth-user.decorator");
 const user_profile_dto_1 = require("./dto/user-profile.dto");
 const edit_profile_dto_1 = require("./dto/edit-profile.dto");
 const verify_email_dto_1 = require("./dto/verify-email.dto");
+const collection_entity_1 = require("../collection/entities/collection.entity");
+const collection_service_1 = require("../collection/collection.service");
 let UserResolver = class UserResolver {
-    constructor(userService) {
+    constructor(userService, collectionService) {
         this.userService = userService;
+        this.collectionService = collectionService;
     }
     createUser(createUserInput) {
         return this.userService.create(createUserInput);
@@ -48,6 +51,9 @@ let UserResolver = class UserResolver {
     }
     removeUser(id) {
         return this.userService.remove(id);
+    }
+    collections(user) {
+        return this.collectionService.userFromCollection(user.id);
     }
     verifyEmail(verifyEmailInput) {
         return this.userService.verifyEmail(verifyEmailInput.code);
@@ -103,9 +109,16 @@ __decorate([
     (0, graphql_1.Mutation)(() => user_entity_1.User),
     __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.Int })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "removeUser", null);
+__decorate([
+    (0, graphql_1.ResolveField)((type) => [collection_entity_1.Collection], { name: 'collections', nullable: true }),
+    __param(0, (0, graphql_1.Parent)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entity_1.User]),
+    __metadata("design:returntype", void 0)
+], UserResolver.prototype, "collections", null);
 __decorate([
     (0, graphql_1.Mutation)(() => verify_email_dto_1.VerifyEmailOutput),
     __param(0, (0, graphql_1.Args)('input')),
@@ -115,7 +128,8 @@ __decorate([
 ], UserResolver.prototype, "verifyEmail", null);
 UserResolver = __decorate([
     (0, graphql_1.Resolver)((of) => user_entity_1.User),
-    __metadata("design:paramtypes", [user_service_1.UserService])
+    __metadata("design:paramtypes", [user_service_1.UserService,
+        collection_service_1.CollectionService])
 ], UserResolver);
 exports.UserResolver = UserResolver;
 //# sourceMappingURL=user.resolver.js.map

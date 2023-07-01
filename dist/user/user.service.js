@@ -121,19 +121,26 @@ let UserService = class UserService {
                     id: userId,
                 },
             });
-            if (user && user.email !== editProfileInput.email) {
+            if (user) {
                 const hashPassword = await bcrypt.hash(editProfileInput.password, 10);
-                const verification = await this.prisma.verification.create({
-                    data: {
-                        code: (0, uuid_1.v4)().replace(/-/g, ''),
-                        user: {
-                            connect: {
-                                id: user.id,
+                if (user.email !== editProfileInput.email) {
+                    await this.prisma.verification.deleteMany({
+                        where: {
+                            userId: user.id,
+                        },
+                    });
+                    const verification = await this.prisma.verification.create({
+                        data: {
+                            code: (0, uuid_1.v4)().replace(/-/g, ''),
+                            user: {
+                                connect: {
+                                    id: user.id,
+                                },
                             },
                         },
-                    },
-                });
-                this.mailService.sendVerificationEmail(user.email, verification.code);
+                    });
+                    this.mailService.sendVerificationEmail(user.email, verification.code);
+                }
                 await this.prisma.user.update({
                     where: {
                         id: userId,
@@ -141,6 +148,10 @@ let UserService = class UserService {
                     data: {
                         email: editProfileInput.email,
                         password: editProfileInput.password ? hashPassword : user.password,
+                        nickname: editProfileInput.nickname,
+                        bio: editProfileInput.bio,
+                        bannerImage: editProfileInput.bannerImage,
+                        profileImage: editProfileInput.profileImage,
                     },
                 });
             }
@@ -152,7 +163,7 @@ let UserService = class UserService {
         catch (e) {
             return {
                 ok: false,
-                error: "Couldn't update profile",
+                error: e,
             };
         }
     }

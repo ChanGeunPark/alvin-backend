@@ -1,41 +1,220 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"] // if you want to plenetScale
 }
 
 datasource db {
-  provider = "postgresql"
+  provider             = "mysql"
+  // provider = "postgresql"
   url      = env("DATABASE_URL")
+  referentialIntegrity = "prisma" // if you want to plenetScale
+
 }
 
 model User{
-  id        Int      @id @default(autoincrement())
+  id        String      @id @default(cuid())
   email     String   @unique
   password  String
+  profileImage String?
+  bannerImage String?
+  nickname  String?
+  bio       String?
   role      RoleStatus 
   verified  Boolean  @default(false)
 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations
   verification Verification?
+  ArtWorks  ArtWork[]
+  Likes     Like[]
+  Collections Collection[]
+  Comments  Comment[]
+  Followings Follow[] @relation("following")
+  Followers Follow[] @relation("follower")
+  restaurant Restaurant[]
+  conversations conversation[]
+
 }
 
 
-model Verification{
-  id        Int      @id @default(autoincrement())
-  code      String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique
+model AiCharacter {
+  id        String      @id @default(cuid())
+  name      String
+
+  // 세계관
+  worldView String
+
+  // 성격
+  personality String
+
+  // 소개
+  introduction String
+  characterImage String
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+
+  conversations conversation[]
+}
+
+model conversation {
+  id        Int      @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  aiCharacter AiCharacter @relation(fields: [aiCharacterId], references: [id])
+  aiCharacterId String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  }
+
+
+
+model Verification{
+  id        String       @id @default(cuid())
+  code      String   @unique
+  userId    String      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 
+model ArtWork{
+  id        String       @id @default(cuid())
+  title     String
+  description String?
+  // tags      String[]
+  image     String
+  width     Int?
+  height    Int?
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
+  // Relations
+  collections Collection[]
+  Likes     Like[]
+  Tags      Tag[]
+  Comments  Comment[]
+
+
+  @@index([userId])
+
+}
+
+model Collection{
+  id        String      @id @default(cuid())
+  title      String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  artworkId String 
+
+  // Relations
+  artwork   ArtWork @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
+  @@index([userId])
+}
+
+model Comment{
+  id        String    @id @default(cuid())
+  content   String
+  userId    String
+  artworkId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artwork   ArtWork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+
+}
+
+model Like{
+  id        String      @id @default(cuid())
+  userId    String
+  artworkId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artwork   ArtWork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+
+}
+
+model Tag{
+  id        String      @id @default(cuid())
+  name      String   @unique
+  artworkId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  artwork   ArtWork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+}
+
+model Follow{
+  id            String      @id @default(cuid())
+  followingId   String
+  followerId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  following      User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+}
+
 // Enums
 enum RoleStatus {
   Client
   Owner
-  Delivery
+  Admin
 }
 
+
+// study model restaurant
+model Restaurant {
+  id        String      @id @default(cuid())
+  name      String
+  coverImg  String
+  isVegan   Boolean
+  address   String
+  userId    String
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relations
+  categories Category[]
+
+}
+
+model Category {
+  id        String      @id @default(cuid())
+  name      String
+  slug      String
+  coverImg  String
+  isVegan   Boolean
+  restaurantId String
+  
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}

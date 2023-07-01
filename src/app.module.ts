@@ -6,17 +6,19 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
 import { PrismaService } from './prisma/prisma.service';
 import { UserModule } from './user/user.module';
-import { CommonModule } from './common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from './jwt/jwt.module';
 import * as Joi from 'joi';
 import { JwtMiddleWare } from './jwt/jwt.middleware';
-import { AuthModule } from './auth/auth.module';
+
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { MailModule } from './mail/mail.module';
+import { ArtWorkModule } from './artwork/artwork.module';
+import { CollectionModule } from './collection/collection.module';
+import { RestaurantModule } from './restaurant/restaurant.module';
+import { CharacterModule } from './character/character.module';
 
 @Module({
   imports: [
@@ -60,6 +62,10 @@ import { MailModule } from './mail/mail.module';
       domain: process.env.MAIL_DOMAIN_NAME,
       fromEmail: process.env.MAIL_FROM_EMAIL,
     }),
+    ArtWorkModule,
+    CharacterModule,
+    CollectionModule,
+    RestaurantModule,
   ],
   controllers: [],
   providers: [PrismaService],

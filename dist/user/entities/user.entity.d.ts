@@ -1,12 +1,18 @@
 import { CoreEntity } from 'src/common/entities/core.entity';
+import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
 export declare enum UserRole {
     Client = "Client",
     Owner = "Owner",
-    Delivery = "Delivery"
+    Admin = "Admin"
 }
 export declare class User extends CoreEntity {
     email: string;
     password: string;
     verified?: boolean;
-    role: 'Client' | 'Owner' | 'Delivery';
+    profileImage?: string;
+    bannerImage?: string;
+    nickname?: string;
+    bio?: string;
+    role: 'Client' | 'Owner' | 'Admin';
+    restaurants?: Restaurant[];
 }

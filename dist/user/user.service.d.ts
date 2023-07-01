@@ -20,14 +20,14 @@ export declare class UserService {
         token?: string;
     }>;
     findAll(): import(".prisma/client").PrismaPromise<import(".prisma/client").User[]>;
-    remove(id: number): string;
-    findById(id: number): Promise<UserProfileOutput>;
-    editProfile(userId: number, editProfileInput: EditProfileInput): Promise<{
+    remove(id: string): string;
+    findById(id: string): Promise<UserProfileOutput>;
+    editProfile(userId: string, editProfileInput: EditProfileInput): Promise<{
         ok: boolean;
         error?: undefined;
     } | {
         ok: boolean;
-        error: string;
+        error: any;
     }>;
     verifyEmail(code: string): Promise<{
         ok: boolean;

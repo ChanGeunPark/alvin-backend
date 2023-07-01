@@ -18,6 +18,10 @@ const Joi = require("joi");
 const jwt_middleware_1 = require("./jwt/jwt.middleware");
 const apollo_server_core_1 = require("apollo-server-core");
 const mail_module_1 = require("./mail/mail.module");
+const artwork_module_1 = require("./artwork/artwork.module");
+const collection_module_1 = require("./collection/collection.module");
+const restaurant_module_1 = require("./restaurant/restaurant.module");
+const character_module_1 = require("./character/character.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(jwt_middleware_1.JwtMiddleWare).forRoutes({
@@ -57,6 +61,10 @@ AppModule = __decorate([
                 domain: process.env.MAIL_DOMAIN_NAME,
                 fromEmail: process.env.MAIL_FROM_EMAIL,
             }),
+            artwork_module_1.ArtWorkModule,
+            character_module_1.CharacterModule,
+            collection_module_1.CollectionModule,
+            restaurant_module_1.RestaurantModule,
         ],
         controllers: [],
         providers: [prisma_service_1.PrismaService],

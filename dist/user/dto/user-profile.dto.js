@@ -16,8 +16,8 @@ const user_entity_1 = require("../entities/user.entity");
 let UserProfileInput = class UserProfileInput {
 };
 __decorate([
-    (0, graphql_1.Field)((type) => Number),
-    __metadata("design:type", Number)
+    (0, graphql_1.Field)((type) => String),
+    __metadata("design:type", String)
 ], UserProfileInput.prototype, "userId", void 0);
 UserProfileInput = __decorate([
     (0, graphql_1.ArgsType)()

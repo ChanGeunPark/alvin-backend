@@ -1,4 +1,4 @@
-### nuber eats with prisma
+### nestjs with prisma
 
 ## Running the app
 
@@ -36,3 +36,10 @@ DATABASE_URL="postgresql://<user-name>:<password>@localhost:<port>/<db-name>?sch
 - See Profile
 - Edit Profile
 - Verify Email
+
+## Restaurant Model
+
+- name
+- category
+- address
+- coverImage
